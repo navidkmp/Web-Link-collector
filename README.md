@@ -16,7 +16,7 @@ A lightweight web scraping application built with **Python and Django**, designe
 - Bootstrap
 
 ## 🔗 Links
-- **GitHub:** [Repository](https://github.com/navidkmp)
+- **GitHub:** [navidkmp](https://github.com/navidkmp)
 
 ## ⚙️ Getting Started
 
