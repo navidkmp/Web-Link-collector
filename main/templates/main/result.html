@@ -1,0 +1,306 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Scraper | Link Collector</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #141e30, #243b55);
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            color: #fff;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            padding-top: 30px;
+            max-width: 1200px;
+        }
+
+        h2 {
+            font-size: 32px;
+            font-weight: bold;
+            color: #fff;
+            letter-spacing: 1px;
+            text-align: center;
+            margin: 0;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            margin-bottom: 35px;
+        }
+
+        /* Search section */
+        .form-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            flex-wrap: nowrap;
+        }
+
+        .form-inline {
+            display: flex;
+            align-items: center;
+            flex: 0 1 600px;
+            width: 600px;
+            min-width: 0;
+            gap: 10px;
+            flex-wrap: nowrap;
+            margin: 0;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 0;
+            margin: 0 !important;
+        }
+
+        .form-control {
+            width: 100%;
+            min-width: 0;
+            height: 45px;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background: #f4f6f9;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+        }
+
+        .btn {
+            border-radius: 10px;
+            padding: 11px 22px;
+            font-weight: bold;
+            transition: 0.3s;
+            white-space: nowrap;
+            flex-shrink: 0;
+            margin: 0 !important;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            border: none;
+            color: #222;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Table */
+        .table-container {
+            width: 100%;
+            padding: 0;
+        }
+
+        .table {
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #1c2838;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+        }
+
+        .table thead th {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 16px;
+        }
+
+        .table tbody td {
+            padding: 14px 16px;
+            vertical-align: middle;
+            border-color: rgba(255, 255, 255, 0.08);
+            color: #e5eaf0;
+            overflow-wrap: anywhere;
+        }
+
+        /* ID column */
+        .table th:first-child,
+        .table td:first-child {
+            width: 80px;
+            min-width: 80px;
+            white-space: nowrap;
+            overflow-wrap: normal;
+            word-break: keep-all;
+            text-align: center;
+        }
+
+        .table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 25px;
+            }
+
+            .form-actions {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .form-inline {
+                width: 100%;
+                flex: 1 1 100%;
+            }
+
+            .form-group {
+                flex: 1;
+            }
+
+            .form-control {
+                width: 100%;
+            }
+
+            .btn-delete {
+                width: auto;
+            }
+
+            .table {
+                font-size: 12px;
+            }
+
+            .table thead th,
+            .table tbody td {
+                padding: 10px 8px;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 20px;
+            padding: 25px 0;
+            margin-top: 0px;
+        }
+
+        @media (max-width: 400px) {
+            .form-inline {
+                flex-wrap: wrap;
+            }
+
+            .form-group {
+                flex: 1 1 100%;
+            }
+
+            .form-inline .btn-primary {
+                width: 100%;
+            }
+
+            .btn-delete {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <div class="row">
+        <div class="col-12">
+            <div class="header">
+                <h2>Link Collector</h2>
+            </div>
+        </div>
+    </div>
+    <!-- Search Form -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="form-actions">
+                <form method="POST" action="/" class="form-inline">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input class="form-control" name="site" type="text" id="site" placeholder="e.g:https://www.google.com" required>
+                    </div>
+                    <button class="btn btn-primary" type="submit">
+                        Scrape
+                    </button>
+                </form>
+                <a class="btn btn-warning btn-delete" href="/delete"> Delete </a>
+            </div>
+        </div>
+    </div>
+    <!-- Results Table -->
+    <div class="row">
+        <div class="col-12 table-container">
+            <table class="table table-dark table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Link</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for link in data %}
+
+                    <tr>
+                        <td>{{ link.id }}</td>
+                        <td>{{ link.name }}</td>
+                        <td>{{ link.address }}</td>
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            No links found.
+                        </td>
+                    </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <footer class="footer">
+        Made with Python & Django by <a href="https://github.com/navidkmp">NdevX</a>
+    </footer>
+</div>
+</body>
+</html>
