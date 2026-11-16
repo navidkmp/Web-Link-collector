@@ -1,10 +1,13 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Scraper | Link Collector</title>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <style>
         * {
             box-sizing: border-box;
@@ -54,22 +57,25 @@
         .form-inline {
             display: flex;
             align-items: center;
-            flex: 0 1 600px;
-            width: 600px;
+            flex: 0 1 520px;
+            width: 520px;
             min-width: 0;
             gap: 10px;
             flex-wrap: nowrap;
             margin: 0;
         }
 
-        .form-group {
-            flex: 1;
+        .form-inline .form-group {
+            display: flex;
+            flex: 1 1 0;
+            width: 0;
             min-width: 0;
             margin: 0 !important;
         }
 
-        .form-control {
-            width: 100%;
+        .form-inline .form-control {
+            display: block;
+            width: 100% !important;
             min-width: 0;
             height: 45px;
             padding: 12px 15px;
@@ -90,6 +96,7 @@
             white-space: nowrap;
             flex-shrink: 0;
             margin: 0 !important;
+            height: 45px;
         }
 
         .btn-primary {
@@ -164,7 +171,25 @@
             background: rgba(255, 255, 255, 0.08);
         }
 
-        /* Responsive */
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 20px;
+            padding: 25px 0;
+            margin-top: 0;
+        }
+
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #66b2ff;
+        }
+
+        /* Mobile responsive */
         @media (max-width: 768px) {
             .container {
                 padding-left: 15px;
@@ -179,26 +204,39 @@
                 font-size: 25px;
             }
 
+            /* Stack input and both buttons */
             .form-actions {
-                flex-wrap: wrap;
-                justify-content: center;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
             }
 
             .form-inline {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
                 width: 100%;
-                flex: 1 1 100%;
+                flex: none;
+                gap: 10px;
             }
 
-            .form-group {
-                flex: 1;
-            }
-
-            .form-control {
+            .form-inline .form-group {
                 width: 100%;
+                flex: none;
             }
 
+            .form-inline .form-control {
+                width: 100% !important;
+                height: 45px;
+            }
+
+            .form-inline .btn-primary,
             .btn-delete {
-                width: auto;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 45px;
             }
 
             .table {
@@ -209,37 +247,28 @@
             .table tbody td {
                 padding: 10px 8px;
             }
-        }
 
-        .footer {
-            text-align: center;
-            color: rgba(255, 255, 255, 0.55);
-            font-size: 20px;
-            padding: 25px 0;
-            margin-top: 0px;
+            .footer {
+                font-size: 16px;
+            }
         }
 
         @media (max-width: 400px) {
-            .form-inline {
-                flex-wrap: wrap;
+            h2 {
+                font-size: 23px;
             }
 
-            .form-group {
-                flex: 1 1 100%;
-            }
-
-            .form-inline .btn-primary {
-                width: 100%;
-            }
-
-            .btn-delete {
-                width: 100%;
+            .table {
+                font-size: 11px;
             }
         }
     </style>
 </head>
+
 <body>
+
 <div class="container">
+
     <!-- Header -->
     <div class="row">
         <div class="col-12">
@@ -248,59 +277,79 @@
             </div>
         </div>
     </div>
+
     <!-- Search Form -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="form-actions">
+
                 <form method="POST" action="/" class="form-inline">
                     {% csrf_token %}
+
                     <div class="form-group">
-                        <input class="form-control" name="site" type="text" id="site" placeholder="e.g:https://www.google.com" required>
+                        <input
+                            class="form-control"
+                            name="site"
+                            type="text"
+                            id="site"
+                            placeholder="e.g: https://www.google.com"
+                            required
+                        >
                     </div>
+
                     <button class="btn btn-primary" type="submit">
                         Scrape
                     </button>
                 </form>
-                <a class="btn btn-warning btn-delete" href="/delete"> Delete </a>
+
+                <a class="btn btn-warning btn-delete" href="/delete">
+                    Delete
+                </a>
+
             </div>
         </div>
     </div>
+
     <!-- Results Table -->
     <div class="row">
         <div class="col-12 table-container">
+
             <table class="table table-dark table-striped">
                 <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Link</th>
-                </tr>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Link</th>
+                    </tr>
                 </thead>
+
                 <tbody>
-                {% for link in data %}
-
-                    <tr>
-                        <td>{{ link.id }}</td>
-                        <td>{{ link.name }}</td>
-                        <td>{{ link.address }}</td>
-                    </tr>
-
-                {% empty %}
-
-                    <tr>
-                        <td colspan="3" class="text-center">
-                            No links found.
-                        </td>
-                    </tr>
-
-                {% endfor %}
+                    {% for link in data %}
+                        <tr>
+                            <td>{{ link.id }}</td>
+                            <td>{{ link.name }}</td>
+                            <td>{{ link.address }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center">
+                                No links found.
+                            </td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
+
         </div>
     </div>
+
+    <!-- Footer -->
     <footer class="footer">
-        Made with Python & Django by <a href="https://github.com/navidkmp">NdevX</a>
+        Made with Python & Django by
+        <a href="https://github.com/navidkmp" target="_blank">NdevX</a>
     </footer>
+
 </div>
+
 </body>
 </html>
